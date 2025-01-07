@@ -5,14 +5,27 @@ source /etc/environment
 
 header "Installing Phusion Passenger..."
 
-## Phusion Passenger requires Ruby. Install it through RVM, not APT,
-## so that the -customizable variant cannot end up having Ruby installed
-## from both APT and RVM.
+## Phusion Passenger requires Ruby. Install if this image does not already have one.
+## Install it through RVM, not APT, so that the -customizable variant cannot end up
+## having Ruby installed from both APT and RVM.
 if [[ ! -e /usr/bin/ruby ]]; then
-	run /pd_build/ruby_support/prepare.sh
-	run /usr/local/rvm/bin/rvm install ruby-3.1.0
+	RVM_ID="ruby-3.4.1"
+
+	run mkdir -p "/build_cache/${ARCH}"
+	if [[ -e "/build_cache/${ARCH}/${RVM_ID}.tar.bz2" ]]; then
+		# use cached ruby if present
+		run /usr/local/rvm/bin/rvm mount "/build_cache/${ARCH}/${RVM_ID}.tar.bz2"
+	else
+		# otherwise build one
+		run minimal_apt_get_install rustc # For compiling Ruby with YJIT
+		MAKEFLAGS=-j$(nproc) run /usr/local/rvm/bin/rvm install $RVM_ID --disable-cache || ( cat /usr/local/rvm/log/*${RVM_ID}*/*.log && false )
+		run cd "/build_cache/${ARCH}"
+		run /usr/local/rvm/bin/rvm prepare "${RVM_ID}"
+		run cd /
+	fi
+
 	# Make passenger_system_ruby work.
-	run create_rvm_wrapper_script ruby3.1 ruby-3.1.0 ruby
+	run create_rvm_wrapper_script $(sed -e 's/-//' -e 's/\.[0-9]$//' <<< $RVM_ID) "$RVM_ID" ruby
 	run /pd_build/ruby_support/finalize.sh
 fi
 
@@ -35,27 +48,38 @@ run touch /etc/service/nginx/down
 run mkdir /etc/service/nginx-log-forwarder
 run cp /pd_build/runit/nginx-log-forwarder /etc/service/nginx-log-forwarder/run
 
+## Use SIGQUIT instead of SIGTERM to shutdown nginx
+run mkdir -p /etc/service/nginx/control/
+run cp /pd_build/runit/nginx-term /etc/service/nginx/control/t
+
+run mkdir -p /var/run/passenger-instreg
+
 run sed -i 's|invoke-rc.d nginx rotate|sv 1 nginx|' /etc/logrotate.d/nginx
 run sed -i -e '/sv 1 nginx.*/a\' -e '		passenger-config reopen-logs >/dev/null 2>&1' /etc/logrotate.d/nginx
+run rm -f /var/log/nginx/error.log
 
 ## Precompile Ruby extensions.
+if [[ -e /usr/bin/ruby3.4 ]]; then
+	run ruby3.4 -S passenger-config build-native-support
+	run setuser app ruby3.4 -S passenger-config build-native-support
+fi
+if [[ -e /usr/bin/ruby3.3 ]]; then
+	run ruby3.3 -S passenger-config build-native-support
+	run setuser app ruby3.3 -S passenger-config build-native-support
+fi
+if [[ -e /usr/bin/ruby3.2 ]]; then
+	run ruby3.2 -S passenger-config build-native-support
+	run setuser app ruby3.2 -S passenger-config build-native-support
+fi
 if [[ -e /usr/bin/ruby3.1 ]]; then
 	run ruby3.1 -S passenger-config build-native-support
 	run setuser app ruby3.1 -S passenger-config build-native-support
 fi
-if [[ -e /usr/bin/ruby3.0 ]]; then
-	run ruby3.0 -S passenger-config build-native-support
-	run setuser app ruby3.0 -S passenger-config build-native-support
+if [[ -e /usr/bin/jruby9.4 ]]; then
+	run jruby9.4 --dev -S passenger-config build-native-support
+	run setuser app jruby9.4 -S passenger-config build-native-support
 fi
-if [[ -e /usr/bin/ruby2.7 ]]; then
-	run ruby2.7 -S passenger-config build-native-support
-	run setuser app ruby2.7 -S passenger-config build-native-support
-fi
-if [[ -e /usr/bin/ruby2.6 ]]; then
-	run ruby2.6 -S passenger-config build-native-support
-	run setuser app ruby2.6 -S passenger-config build-native-support
-fi
-if [[ -e /usr/bin/jruby ]]; then
-	run jruby --dev -S passenger-config build-native-support
-	run setuser app jruby -S passenger-config build-native-support
+if [[ -e /usr/bin/jruby9.3 ]]; then
+	run jruby9.3 --dev -S passenger-config build-native-support
+	run setuser app jruby9.3 -S passenger-config build-native-support
 fi
