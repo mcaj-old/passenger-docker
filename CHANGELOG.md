@@ -1,4 +1,124 @@
-## 2.1.0 (not yet released)
+## 3.1.1 (not released)
+ * Added a Ruby 3.4 image (Ruby 3.4.1)
+ * Default Ruby version is now 3.4.1
+ * Upgraded to JRuby 9.4.9.0 (from 9.4.8.0).
+ * Upgraded to Ruby 3.3.7
+
+## 3.1.0 (release date: 2024-12-09)
+ * Upgraded image base to phusion/baseimage:noble-1.0.0
+   * Upgraded to Ubuntu 24.04 LTS (Noble)
+       - note updated compiler chain and all tools; please test your apps thoroughly
+   * Default Python version is now 3.12 (from 3.10)
+   * Python 2.7 and 3.7 are no longer available from the Deadsnakes PPA; we weren't providing images for either previously
+   * Nginx version is now 1.24 (from 1.18)
+       - changelog can be found at https://nginx.org/en/CHANGES-1.24
+       - if you provide your own nginx.conf, please define error_log at the root scope, not the http scope; see https://github.com/phusion/passenger/issues/2541
+       - a number of modules are no longer installed and enabled by default (mod-http-geoip2, mod-http-image-filter, mod-http-xslt-filter, mod-mail, mod-stream, mod-stream-geoip2)
+    * Redis version is now 7.0.15 (from 6.0.16)
+ * Added a Python 3.13 image
+ * Dropped Python 3.8 image
+ * Upgraded to Ruby 3.2.6
+ * Upgraded to Ruby 3.3.6
+ * Upgraded to Phusion Passenger 6.0.24 (from 6.0.23).
+
+## 3.0.7 (release date: 2024-07-30)
+ * Upgraded to Ruby 3.3.4
+ * Upgraded to Phusion Passenger 6.0.23 (from 6.0.22).
+ * Upgraded to Ruby 3.2.5
+ * Upgraded to JRuby 9.4.8.0 (from 9.4.7.0).
+ * Upgraded to JRuby 9.3.15.0 (from 9.3.14.0).
+
+## 3.0.6 (release date: 2024-06-13)
+ * Upgraded to Ruby 3.1.6
+ * Upgraded to Ruby 3.3.3
+
+## 3.0.5 (release date: 2024-05-18)
+ * Removed Ruby 3.0 (EOL: 2024-04-23)
+ * Upgraded to Phusion Passenger 6.0.22 (from 6.0.21).
+
+## 3.0.4 (release date: 2024-05-17)
+ * Upgraded to Phusion Passenger 6.0.21 (from 6.0.20).
+ * Upgraded to JRuby 9.4.7.0 (from 9.4.6.0).
+
+## 3.0.3 (release date: 2024-04-26)
+ * Upgraded to JRuby 9.3.14.0 (from 9.3.13.0)
+ * Upgraded to JRuby 9.4.6.0 (from 9.4.5.0)
+ * Upgraded Node 18 LTS -> 20 LTS.
+ * Fix https://github.com/rvm/rvm/issues/5449
+ * Upgraded to Ruby 3.0.7
+ * Upgraded to Ruby 3.1.5
+ * Upgraded to Ruby 3.2.4
+ * Upgraded to Ruby 3.3.1
+ * Updated image base to phusion/baseimage:jammy-1.0.4
+
+## 3.0.2 (release date: 2024-02-23)
+ * Fixes an issue with passenger-full not having ruby 3.3 as default
+ * Bumps fallback ruby to 3.3.
+
+## 3.0.1 (release date: 2024-01-22)
+ * Upgraded to Phusion Passenger 6.0.20 (from 6.0.19).
+
+## 3.0.0 (release date: 2024-01-18)
+ * Added a Ruby 3.3.0 image
+ * Upgraded to JRuby 9.3.13.0 (from 9.3.11.0)
+ * Upgraded to JRuby 9.4.5.0 (from 9.4.3.0)
+ * Added versioned Python images for Python versions 3.8 to 3.12
+ * Upgraded to Ruby 3.2.3
+
+## 2.6.0 (release date: 2023-11-20)
+ * Upgraded to Phusion Passenger 6.0.19 (from 6.0.18).
+ * Switched image base to phusion/baseimage:jammy-1.0.1
+   * Upgraded to Ubuntu 22.04 LTS (Jammy)
+   * Default Python version is now 3.10, and Python 2.7 is no longer installed by default
+ * Updated Python install script to be able to install any supported version from base or the Deadsnakes PPA
+ * Updated Node.js install script to be able to install any supported version from Nodesource; default version is still 18
+ * Created yarn and related executables whenever installing Node.js
+ * Removed Ruby 2.7 (EOL 2023-03-31)
+ * Compile all CRuby versions from source to ensure uniformity and YJIT capability in versions 3.1+
+ * Use Ruby 3.2.x by default
+ * Upgraded to JRuby 9.3.11.0 (from 9.3.9.0)
+ * Upgraded to JRuby 9.4.3.0 (from 9.4.0.0)
+
+## 2.5.1 (release date: 2023-06-14)
+ * Upgraded to Phusion Passenger 6.0.18 (from 6.0.17).
+ * Upgraded to Ruby 2.7.8
+ * Upgraded to Ruby 3.0.6
+ * Upgraded to Ruby 3.1.4
+ * Upgraded to Ruby 3.2.2
+ * Upgraded Node 16 LTS -> 18 LTS.
+
+## 2.5.0 (release date: 2023-01-26)
+ * Upgraded to Phusion Passenger 6.0.17 (from 6.0.16).
+ * Added a Ruby 3.2.0 image
+ * Added a JRuby 9.4.0.0 image
+ * Change to installing Node via Node Source (in Ruby images) instead of using outdated distro version, Node images already did this.
+
+## 2.4.1 (release date: 2022-12-20)
+ * Fixed tmpdir issue with Passenger 6.0.16
+
+## 2.4.0 (release date: 2022-12-19)
+ * Removed Ruby 2.6 (end of life was March 31, 2022)
+ * Upgraded to Ruby 2.7.7
+ * Upgraded to Ruby 3.0.5
+ * Upgraded to Ruby 3.1.3
+ * Upgraded to JRuby 9.3.9.0 (from 9.3.4.0)
+
+## 2.3.1 (release date: 2022-09-19)
+ * Upgraded to Phusion Passenger 6.0.15 (from 6.0.14).
+
+## 2.3.0 (release date: 2022-05-10)
+ * Upgraded to Phusion Passenger 6.0.14 (from 6.0.13).
+ * Upgraded to Ruby 2.6.10
+ * Upgraded to Ruby 2.7.6
+ * Upgraded to Ruby 3.0.4
+ * Upgraded to Ruby 3.1.2
+
+## 2.2.0 (release date: 2022-03-29)
+ * Upgraded to JRuby 9.3.4.0 (from 9.3.0.0).
+ * Upgraded to Phusion Passenger 6.0.13 (from 6.0.12).
+ * Added Ruby 3.1.1 image.
+
+## 2.1.0 (release date: 2021-12-07)
  * Upgraded to Ruby 2.6.9
  * Upgraded to Ruby 2.7.5
  * Upgraded to Ruby 3.0.3
